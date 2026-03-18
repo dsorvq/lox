@@ -15,20 +15,20 @@ class Scanner {
   std::vector<Token> ScanAll();
 
  private:
-	bool IsAtEnd();
+  bool IsAtEnd();
 
-	char Advance();
-	bool AdvanceIfMatch(char c);
+  char Advance();
+  bool AdvanceIfMatch(char c);
 
-	char Peek();
+  char Peek();
 
-	Token MakeToken(TokenType type);
+  Token MakeToken(TokenType type);
 
  private:
   std::span<char> source_;
-	size_t start_{0};
-	size_t current_{0};
-	size_t line_{1};
+  size_t start_{0};
+  size_t current_{0};
+  size_t line_{1};
 };
 
 }  // namespace lox
