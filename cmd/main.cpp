@@ -1,7 +1,17 @@
+#include <iostream>
+#include <string>
+#include <print>
+
 #include "lox/scanner/scanner.hpp"
 
 int main() {
-	Scanner scanner;
-	scanner.Scan();
-}
+  std::string source;
+  std::getline(std::cin, source);
 
+  lox::Scanner scanner(source);
+  auto tokens = scanner.ScanAll();
+
+	for (const auto& token : tokens) {
+		std::println("l: {}", token.lexeme_);
+	}
+}
