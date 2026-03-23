@@ -23,11 +23,14 @@ class Scanner {
   char Peek();
   char PeekNext();
 
-	bool IsDigit(char);
+	bool IsDigit(char c);
+	bool IsAlpha(char c);
+	bool IsAlphanumeric(char c);
 
   Token MakeToken(TokenType type);
 	Token MakeStringToken();
 	Token MakeNumberToken();
+	Token MakeIdentifierToken();
 
 	void SkipWhitespace();
 

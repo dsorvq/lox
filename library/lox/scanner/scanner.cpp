@@ -68,6 +68,8 @@ Token Scanner::ScanNext() {
     default:
       if (IsDigit(c)) {
         return MakeNumberToken();
+      } else if (IsAlpha(c)) {
+        return MakeIdentifierToken();
       }
 
       // TODO: better error handling
@@ -128,7 +130,15 @@ char Scanner::PeekNext() {
 }
 
 bool Scanner::IsDigit(char c) {
-  return std::isdigit(c) == 1;
+  return std::isdigit(c) > 0;
+}
+
+bool Scanner::IsAlpha(char c) {
+  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+}
+
+bool Scanner::IsAlphanumeric(char c) {
+  return IsAlpha(c) || IsDigit(c);
 }
 
 Token Scanner::MakeToken(TokenType type) {
@@ -165,6 +175,20 @@ Token Scanner::MakeNumberToken() {
   }
 
   return MakeToken(TokenType::kNumber);
+}
+
+Token Scanner::MakeIdentifierToken() {
+  while (IsAlphanumeric(Peek())) {
+    Advance();
+  }
+
+  Token token = MakeToken(TokenType::kIdentifier);
+  auto token_type = KeywordToTokenType(token.lexeme_);
+  if (token_type) {
+    token.type_ = *token_type;
+  }
+
+  return token;
 }
 
 void Scanner::SkipWhitespace() {
