@@ -1,6 +1,8 @@
 #include "scanner.hpp"
 
 #include <cassert>
+#include <iostream>
+#include <print>
 #include <string>
 
 #include "lox/token/token.hpp"
@@ -54,6 +56,9 @@ Token Scanner::ScanNext() {
     case '>':
       return MakeToken(AdvanceIfMatch('=') ? TokenType::kGreaterEqual
                                            : TokenType::kGreater);
+
+    case '"':
+      return MakeStringToken();
   }
 
   return MakeToken(TokenType::kEOF);
@@ -104,6 +109,23 @@ char Scanner::Peek() {
 
 Token Scanner::MakeToken(TokenType type) {
   return Token(type, std::string(source_.data() + start_, current_ - start_));
+}
+
+Token Scanner::MakeStringToken() {
+  while (Peek() != '"') {
+    if (Peek() == '\n') {
+      ++line_;
+    }
+    Advance();
+  }
+
+  if (IsAtEnd()) {
+    // TODO: better error handing
+    std::print(std::cerr, "Unterminated string");
+  }
+
+  Advance();
+  return MakeToken(TokenType::kString);
 }
 
 void Scanner::SkipWhitespace() {

@@ -26,6 +26,8 @@ enum class TokenType {
   kLessEqual,
   kGreaterEqual,
 
+  kString,
+
   kEOF,
 };
 

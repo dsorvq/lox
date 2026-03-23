@@ -23,6 +23,7 @@ class Scanner {
   char Peek();
 
   Token MakeToken(TokenType type);
+	Token MakeStringToken();
 
 	void SkipWhitespace();
 
