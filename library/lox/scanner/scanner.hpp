@@ -21,9 +21,13 @@ class Scanner {
   bool AdvanceIfMatch(char c);
 
   char Peek();
+  char PeekNext();
+
+	bool IsDigit(char);
 
   Token MakeToken(TokenType type);
 	Token MakeStringToken();
+	Token MakeNumberToken();
 
 	void SkipWhitespace();
 

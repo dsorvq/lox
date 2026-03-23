@@ -27,8 +27,11 @@ enum class TokenType {
   kGreaterEqual,
 
   kString,
+  kNumber,
 
   kEOF,
+
+  kError,
 };
 
 struct Token {

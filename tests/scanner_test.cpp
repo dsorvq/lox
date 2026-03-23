@@ -148,3 +148,25 @@ TEST(ScannerTest, MultipleStringTokens) {
   EXPECT_EQ(tokens[5].type_, lox::TokenType::kEOF);
   EXPECT_EQ(tokens[5].lexeme_, "");
 }
+
+TEST(ScannerTest, NumberToken) {
+  std::string input = "1234 != 543.3";
+  std::vector<char> source(input.begin(), input.end());
+  lox::Scanner scanner(source);
+
+  std::vector<lox::Token> tokens = scanner.ScanAll();
+
+  ASSERT_EQ(tokens.size(), 4);
+
+  EXPECT_EQ(tokens[0].type_, lox::TokenType::kNumber);
+  EXPECT_EQ(tokens[0].lexeme_, "1234");
+
+  EXPECT_EQ(tokens[1].type_, lox::TokenType::kBangEqual);
+  EXPECT_EQ(tokens[1].lexeme_, "!=");
+
+  EXPECT_EQ(tokens[2].type_, lox::TokenType::kNumber);
+  EXPECT_EQ(tokens[2].lexeme_, "543.3");
+
+  EXPECT_EQ(tokens[3].type_, lox::TokenType::kEOF);
+  EXPECT_EQ(tokens[3].lexeme_, "");
+}

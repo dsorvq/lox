@@ -1,6 +1,7 @@
 #include "scanner.hpp"
 
 #include <cassert>
+#include <cctype>
 #include <iostream>
 #include <print>
 #include <string>
@@ -17,6 +18,10 @@ Token Scanner::ScanNext() {
   SkipWhitespace();
 
   start_ = current_;
+
+  if (IsAtEnd()) {
+    return MakeToken(TokenType::kEOF);
+  }
 
   char c = Advance();
 
@@ -59,9 +64,16 @@ Token Scanner::ScanNext() {
 
     case '"':
       return MakeStringToken();
-  }
 
-  return MakeToken(TokenType::kEOF);
+    default:
+      if (IsDigit(c)) {
+        return MakeNumberToken();
+      }
+
+      // TODO: better error handling
+      std::print(std::cerr, "Unexpected symbol");
+      return MakeToken(TokenType::kError);
+  }
 }
 
 std::vector<Token> Scanner::ScanAll() {
@@ -107,6 +119,18 @@ char Scanner::Peek() {
   return source_[current_];
 }
 
+char Scanner::PeekNext() {
+  if (current_ + 1 >= source_.size()) {
+    return '\0';
+  }
+
+  return source_[current_ + 1];
+}
+
+bool Scanner::IsDigit(char c) {
+  return std::isdigit(c) == 1;
+}
+
 Token Scanner::MakeToken(TokenType type) {
   return Token(type, std::string(source_.data() + start_, current_ - start_));
 }
@@ -126,6 +150,21 @@ Token Scanner::MakeStringToken() {
 
   Advance();
   return MakeToken(TokenType::kString);
+}
+
+Token Scanner::MakeNumberToken() {
+  while (IsDigit(Peek())) {
+    Advance();
+  }
+
+  if (Peek() == '.') {
+    Advance();
+    while (IsDigit(Peek())) {
+      Advance();
+    }
+  }
+
+  return MakeToken(TokenType::kNumber);
 }
 
 void Scanner::SkipWhitespace() {
