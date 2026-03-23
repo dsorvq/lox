@@ -24,6 +24,8 @@ class Scanner {
 
   Token MakeToken(TokenType type);
 
+	void SkipWhitespace();
+
  private:
   std::span<char> source_;
   size_t start_{0};

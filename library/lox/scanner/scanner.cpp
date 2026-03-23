@@ -3,6 +3,8 @@
 #include <cassert>
 #include <string>
 
+#include "lox/token/token.hpp"
+
 namespace lox {
 
 Scanner::Scanner(std::span<char> source)
@@ -10,6 +12,8 @@ Scanner::Scanner(std::span<char> source)
 }
 
 Token Scanner::ScanNext() {
+  SkipWhitespace();
+
   start_ = current_;
 
   char c = Advance();
@@ -37,6 +41,19 @@ Token Scanner::ScanNext() {
       return MakeToken(TokenType::kSlash);
     case '*':
       return MakeToken(TokenType::kStar);
+
+    case '!':
+      return MakeToken(AdvanceIfMatch('=') ? TokenType::kBangEqual
+                                           : TokenType::kBang);
+    case '=':
+      return MakeToken(AdvanceIfMatch('=') ? TokenType::kEqualEqual
+                                           : TokenType::kEqual);
+    case '<':
+      return MakeToken(AdvanceIfMatch('=') ? TokenType::kLessEqual
+                                           : TokenType::kLess);
+    case '>':
+      return MakeToken(AdvanceIfMatch('=') ? TokenType::kGreaterEqual
+                                           : TokenType::kGreater);
   }
 
   return MakeToken(TokenType::kEOF);
@@ -87,6 +104,25 @@ char Scanner::Peek() {
 
 Token Scanner::MakeToken(TokenType type) {
   return Token(type, std::string(source_.data() + start_, current_ - start_));
+}
+
+void Scanner::SkipWhitespace() {
+  while (!IsAtEnd()) {
+    auto c = Peek();
+    switch (c) {
+      case ' ':
+      case '\t':
+      case '\r':
+        Advance();
+        break;
+      case '\n':
+        ++line_;
+        Advance();
+        break;
+      default:
+        return;
+    }
+  }
 }
 
 }  // namespace lox

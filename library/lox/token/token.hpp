@@ -16,6 +16,15 @@ enum class TokenType {
   kSemicolon,
   kSlash,
   kStar,
+  kBang,
+  kEqual,
+  kLess,
+  kGreater,
+
+  kBangEqual,
+  kEqualEqual,
+  kLessEqual,
+  kGreaterEqual,
 
   kEOF,
 };

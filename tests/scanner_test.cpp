@@ -75,3 +75,33 @@ TEST(ScannerTest, SingleTokensWithWhitespaces) {
   EXPECT_EQ(tokens[11].type_, lox::TokenType::kEOF);
   EXPECT_EQ(tokens[11].lexeme_, "");
 }
+
+TEST(ScannerTest, ComparisonAndEqualityTokens) {
+  std::string input = "! = < > != == <= >= ";
+  std::vector<char> source(input.begin(), input.end());
+  std::span<char> source_span(source);
+  lox::Scanner scanner(source_span);
+
+  std::vector<lox::Token> tokens = scanner.ScanAll();
+
+  ASSERT_EQ(tokens.size(), 9);
+
+  EXPECT_EQ(tokens[0].type_, lox::TokenType::kBang);
+  EXPECT_EQ(tokens[0].lexeme_, "!");
+  EXPECT_EQ(tokens[1].type_, lox::TokenType::kEqual);
+  EXPECT_EQ(tokens[1].lexeme_, "=");
+  EXPECT_EQ(tokens[2].type_, lox::TokenType::kLess);
+  EXPECT_EQ(tokens[2].lexeme_, "<");
+  EXPECT_EQ(tokens[3].type_, lox::TokenType::kGreater);
+  EXPECT_EQ(tokens[3].lexeme_, ">");
+  EXPECT_EQ(tokens[4].type_, lox::TokenType::kBangEqual);
+  EXPECT_EQ(tokens[4].lexeme_, "!=");
+  EXPECT_EQ(tokens[5].type_, lox::TokenType::kEqualEqual);
+  EXPECT_EQ(tokens[5].lexeme_, "==");
+  EXPECT_EQ(tokens[6].type_, lox::TokenType::kLessEqual);
+  EXPECT_EQ(tokens[6].lexeme_, "<=");
+  EXPECT_EQ(tokens[7].type_, lox::TokenType::kGreaterEqual);
+  EXPECT_EQ(tokens[7].lexeme_, ">=");
+  EXPECT_EQ(tokens[8].type_, lox::TokenType::kEOF);
+  EXPECT_EQ(tokens[8].lexeme_, "");
+}
